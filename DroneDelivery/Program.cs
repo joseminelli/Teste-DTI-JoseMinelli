@@ -14,6 +14,7 @@ namespace DroneDelivery
         {
             var manager = new DeliveryManager();
 
+
             manager.AddDrone(new Drone("DR-01", 10.0, 30.0));
             manager.AddDrone(new Drone("DR-02", 6.0, 20.0));
 

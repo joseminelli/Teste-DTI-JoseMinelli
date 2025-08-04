@@ -9,6 +9,7 @@ namespace DroneDelivery.Services
 {
     public class DeliveryManager
     {
+        private DeliveryReport report = new DeliveryReport();
         private List<Drone> drones = new List<Drone>();
         private List<Package> packages = new List<Package>();
 
@@ -55,21 +56,20 @@ namespace DroneDelivery.Services
                 foreach (var pacote in pacotesSelecionados)
                 {
                     Console.WriteLine($"Entregando pacote para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - Peso: {pacote.Weight}kg - Prioridade: {pacote.DeliveryPriority}");
+                    double distancia = drone.Position.DistanceTo(pacote.Destination) * 2;
+                    report.RegistrarEntrega(drone.Id, pacote, distancia);
+
                 }
 
                 Console.WriteLine($"[Drone {drone.Id}] Retornando à base.");
             }
 
-            Console.WriteLine("\n===== Entregas finalizadas =====");
-
-            Console.WriteLine($"Pacotes restantes: {sortedPackages.Count}");
-
             foreach (var pacote in sortedPackages)
             {
-                Console.WriteLine($"Pacote NÃO entregue: Destino=({pacote.Destination.PosX}, {pacote.Destination.PosY}) Peso={pacote.Weight}kg Prioridade={pacote.DeliveryPriority}");
+                report.AdicionarNaoEntregue(pacote);
             }
 
-
+            report.ExibirRelatorio();
         }
 
     }
