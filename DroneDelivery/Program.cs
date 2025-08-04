@@ -1,5 +1,6 @@
 ﻿using DroneDelivery.Models;
 using DroneDelivery.Services;
+using DroneDelivery.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace DroneDelivery
 
             manager.ProcessDeliveries();
 
-            Console.ReadLine();
+            ConsoleHelper.Encerrar("Simulação encerrada. Pressione ENTER para sair.");
         }
     }
 }

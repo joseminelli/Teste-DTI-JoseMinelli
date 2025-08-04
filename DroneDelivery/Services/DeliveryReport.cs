@@ -1,4 +1,5 @@
 ﻿using DroneDelivery.Models;
+using DroneDelivery.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,32 +34,49 @@ namespace DroneDelivery.Services
 
         public void ExibirRelatorio()
         {
-            Console.WriteLine("\n===== RELATÓRIO FINAL =====");
-            Console.WriteLine($"Total de entregas realizadas: {totalEntregas}");
+            ConsoleHelper.Info("\n===== RELATÓRIO FINAL =====");
+            ConsoleHelper.Sucesso($"Total de entregas realizadas: {totalEntregas}");
 
             if (pesoPorDrone.Any())
             {
                 var maisEficiente = pesoPorDrone.OrderByDescending(p => p.Value).First();
-                Console.WriteLine($"Drone mais eficiente: {maisEficiente.Key} (Total entregue: {maisEficiente.Value}kg)");
+                ConsoleHelper.Sucesso($"Drone mais eficiente: {maisEficiente.Key} (Total entregue: {maisEficiente.Value}kg)");
             }
 
-            Console.WriteLine("\nDistância total por drone:");
+            ConsoleHelper.Info("\nDistância total por drone:");
             foreach (var d in distanciaPorDrone)
             {
                 Console.WriteLine($"- {d.Key}: {d.Value:F2} km");
             }
 
-            Console.WriteLine("\nPacotes não entregues:");
+            ConsoleHelper.Erro("\nPacotes não entregues:");
             if (pacotesNaoEntregues.Count == 0)
             {
-                Console.WriteLine("Todos os pacotes foram entregues!");
+                ConsoleHelper.Sucesso("Todos os pacotes foram entregues!");
             }
             else
             {
                 foreach (var pacote in pacotesNaoEntregues)
                 {
-                    Console.WriteLine($"- Destino=({pacote.Destination.PosX}, {pacote.Destination.PosY}) Peso={pacote.Weight}kg Prioridade={pacote.DeliveryPriority}");
+                    string linha = $"- Destino: ({pacote.Destination.PosX}, {pacote.Destination.PosY}) Peso: {pacote.Weight}kg Prioridade: {pacote.DeliveryPriority}";
+
+                    switch (pacote.DeliveryPriority)
+                    {
+                        case Priority.Alta:
+                            ConsoleHelper.PrioridadeAlta(linha);
+                            break;
+                        case Priority.Media:
+                            ConsoleHelper.PrioridadeMedia(linha);
+                            break;
+                        case Priority.Baixa:
+                            ConsoleHelper.PrioridadeBaixa(linha);
+                            break;
+                        default:
+                            Console.WriteLine(linha);
+                            break;
+                    }
                 }
+
             }
         }
     }

@@ -1,9 +1,9 @@
 ﻿using DroneDelivery.Models;
+using DroneDelivery.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DroneDelivery.Services
 {
@@ -18,29 +18,29 @@ namespace DroneDelivery.Services
 
         public void ProcessDeliveries()
         {
-            Console.WriteLine("===== Iniciando simulação de entregas =====");
+            ConsoleHelper.Info("===== Iniciando simulação de entregas =====");
 
-            // Ordenação por prioridade
+            // Ordena os pacotes por prioridade
             var sortedPackages = packages
                 .OrderByDescending(p => p.DeliveryPriority)
                 .ToList();
 
             foreach (var drone in drones)
             {
-                Console.WriteLine($"\n[Drone {drone.Id}] Iniciando entregas...");
+                ConsoleHelper.Info($"\n[Drone {drone.Id}] Iniciando operação...");
 
                 double capacidadeRestante = drone.Capacity;
                 double alcanceRestante = drone.MaxDistance;
-                var pacotesSelecionados = new List<Package>();
+                var pacotesSelecionados = new List<(Package, double)>();
 
-                // adiciona pacotes que encaixem no limite de distancia(ida de volta) e de peso
+                // Percorre os pacotes restantes para ver quais cabem no drone
                 foreach (var pacote in sortedPackages.ToList())
                 {
                     double distancia = drone.Position.DistanceTo(pacote.Destination) * 2;
 
                     if (pacote.Weight <= capacidadeRestante && distancia <= alcanceRestante)
                     {
-                        pacotesSelecionados.Add(pacote);
+                        pacotesSelecionados.Add((pacote, distancia));
                         capacidadeRestante -= pacote.Weight;
                         alcanceRestante -= distancia;
                         sortedPackages.Remove(pacote);
@@ -49,25 +49,49 @@ namespace DroneDelivery.Services
 
                 if (pacotesSelecionados.Count == 0)
                 {
-                    Console.WriteLine("Nenhum pacote foi atribuído a este drone.");
+                    ConsoleHelper.Alerta("[Drone " + drone.Id + "] Nenhum pacote foi atribuído a este drone.");
                     continue;
                 }
 
-                foreach (var pacote in pacotesSelecionados)
-                {
-                    Console.WriteLine($"Entregando pacote para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - Peso: {pacote.Weight}kg - Prioridade: {pacote.DeliveryPriority}");
-                    double distancia = drone.Position.DistanceTo(pacote.Destination) * 2;
-                    report.RegistrarEntrega(drone.Id, pacote, distancia);
+                ConsoleHelper.States($"[Drone {drone.Id}] Estado: {DroneState.Carregando}");
+                Thread.Sleep(500);
 
+                ConsoleHelper.States($"[Drone {drone.Id}] Estado: {DroneState.EmVoo}");
+                Thread.Sleep(500);
+
+                ConsoleHelper.States($"[Drone {drone.Id}] Estado: {DroneState.Entregando}");
+
+                foreach (var (pacote, distancia) in pacotesSelecionados)
+                {
+                    // Imprime a entrega com cor baseada na prioridade
+                    switch (pacote.DeliveryPriority)
+                    {
+                        case Priority.Alta:
+                            ConsoleHelper.PrioridadeAlta($"Entregando para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - {pacote.Weight}kg - {pacote.DeliveryPriority}");
+                            break;
+                        case Priority.Media:
+                            ConsoleHelper.PrioridadeMedia($"Entregando para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - {pacote.Weight}kg - {pacote.DeliveryPriority}");
+                            break;
+                        case Priority.Baixa:
+                            ConsoleHelper.PrioridadeBaixa($"Entregando para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - {pacote.Weight}kg - {pacote.DeliveryPriority}");
+                            break;
+                        default:
+                            ConsoleHelper.Sucesso($"Entregando para ({pacote.Destination.PosX}, {pacote.Destination.PosY}) - {pacote.Weight}kg - {pacote.DeliveryPriority}");
+                            break;
+                    }
+
+                    report.RegistrarEntrega(drone.Id, pacote, distancia);
+                    Thread.Sleep(500);
                 }
 
-                Console.WriteLine($"[Drone {drone.Id}] Retornando à base.");
+                ConsoleHelper.States($"[Drone {drone.Id}] Estado: {DroneState.Retornando}");
+                Thread.Sleep(500);
+
+                drone.State = DroneState.Idle;
             }
 
             foreach (var pacote in sortedPackages)
-            {
                 report.AdicionarNaoEntregue(pacote);
-            }
 
             report.ExibirRelatorio();
         }
