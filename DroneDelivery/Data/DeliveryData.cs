@@ -11,11 +11,13 @@ namespace DroneDelivery.Data
     {
         public static List<Drone> Drones { get; } = new List<Drone>();
         public static List<Package> Pacotes { get; } = new List<Package>();
+        public static List<Location> ZonasProibidas { get; } = new List<Location>();
 
         public static void Reset()
         {
             Drones.Clear();
             Pacotes.Clear();
+            ZonasProibidas.Clear();
         }
     }
 }

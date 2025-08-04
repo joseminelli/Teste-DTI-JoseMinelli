@@ -19,6 +19,9 @@ namespace DroneDelivery
             DeliveryData.Drones.Add(new Drone("DR-01", 10.0, 30.0));
             DeliveryData.Drones.Add(new Drone("DR-02", 6.0, 20.0));
 
+            DeliveryData.ZonasProibidas.Add(new Location(6, 6));
+            DeliveryData.ZonasProibidas.Add(new Location(9, 9));
+
             DeliveryData.Pacotes.Add(new Package(new Location(5, 5), 2.5, Priority.Alta));
             DeliveryData.Pacotes.Add(new Package(new Location(10, 10), 3.0, Priority.Media));
             DeliveryData.Pacotes.Add(new Package(new Location(3, 3), 1.0, Priority.Baixa));

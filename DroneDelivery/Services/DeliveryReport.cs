@@ -1,5 +1,6 @@
 ﻿using DroneDelivery.Models;
 using DroneDelivery.Utils;
+using DroneDelivery.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,10 @@ namespace DroneDelivery.Services
     public class DeliveryReport
     {
         private int totalEntregas = 0;
-        private Dictionary<string, double> pesoPorDrone = new Dictionary<string, double>();
-        private List<Package> pacotesNaoEntregues = new List<Package> { };
-        private Dictionary<string, double> distanciaPorDrone = new Dictionary<string, double>();
+        private readonly Dictionary<string, double> pesoPorDrone = new Dictionary<string, double>();
+        private readonly Dictionary<string, double> distanciaPorDrone = new Dictionary<string, double>();
+        private readonly Dictionary<string, int> entregasPorDrone = new Dictionary<string, int>();
+        private readonly List<Package> pacotesNaoEntregues = new List<Package>();
 
         public void RegistrarEntrega(string droneId, Package pacote, double distancia)
         {
@@ -24,8 +26,13 @@ namespace DroneDelivery.Services
             if (!distanciaPorDrone.ContainsKey(droneId))
                 distanciaPorDrone[droneId] = 0;
             distanciaPorDrone[droneId] += distancia;
-        }
 
+            if (!entregasPorDrone.ContainsKey(droneId))
+                entregasPorDrone[droneId] = 1;
+            else
+                entregasPorDrone[droneId]++;
+
+        }
 
         public void AdicionarNaoEntregue(Package pacote)
         {
@@ -35,6 +42,7 @@ namespace DroneDelivery.Services
         public void ExibirRelatorio()
         {
             ConsoleHelper.Info("\n===== RELATÓRIO FINAL =====");
+
             ConsoleHelper.Sucesso($"Total de entregas realizadas: {totalEntregas}");
 
             if (pesoPorDrone.Any())
@@ -43,13 +51,26 @@ namespace DroneDelivery.Services
                 ConsoleHelper.Sucesso($"Drone mais eficiente: {maisEficiente.Key} (Total entregue: {maisEficiente.Value}kg)");
             }
 
-            ConsoleHelper.Info("\nDistância total por drone:");
-            foreach (var d in distanciaPorDrone)
+            // Estatísticas por drone
+            ConsoleHelper.Info("\n--- Estatísticas por Drone ---");
+            foreach (var drone in DeliveryData.Drones.OrderBy(d => d.Id))
             {
-                Console.WriteLine($"- {d.Key}: {d.Value:F2} km");
+                string id = drone.Id;
+                double peso = pesoPorDrone.ContainsKey(id) ? pesoPorDrone[id] : 0;
+                double distancia = distanciaPorDrone.ContainsKey(id) ? distanciaPorDrone[id] : 0;
+                int entregas = entregasPorDrone.ContainsKey(id) ? entregasPorDrone[id] : 0;
+
+                double bateria = drone.Battery;
+
+                Console.WriteLine($"Drone: {id}");
+                Console.WriteLine($"  - Pacotes entregues: {entregas}");
+                Console.WriteLine($"  - Peso total entregue: {peso}kg");
+                Console.WriteLine($"  - Distância total percorrida: {distancia:F2} km");
+                Console.WriteLine($"  - Bateria restante: {bateria:F1}%");
             }
 
-            ConsoleHelper.Erro("\nPacotes não entregues:");
+            // Pacotes não entregues
+            ConsoleHelper.Erro("\n--- Pacotes NÃO entregues ---");
             if (pacotesNaoEntregues.Count == 0)
             {
                 ConsoleHelper.Sucesso("Todos os pacotes foram entregues!");
@@ -76,7 +97,6 @@ namespace DroneDelivery.Services
                             break;
                     }
                 }
-
             }
         }
     }
