@@ -1,5 +1,6 @@
 ﻿using DroneDelivery.Models;
 using DroneDelivery.Services;
+using DroneDelivery.Data;
 using DroneDelivery.Utils;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,13 @@ namespace DroneDelivery
         {
             var manager = new DeliveryManager();
 
+            DeliveryData.Drones.Add(new Drone("DR-01", 10.0, 30.0));
+            DeliveryData.Drones.Add(new Drone("DR-02", 6.0, 20.0));
 
-            manager.AddDrone(new Drone("DR-01", 10.0, 30.0));
-            manager.AddDrone(new Drone("DR-02", 6.0, 20.0));
-
-            manager.AddPackage(new Package(new Location(5, 5), 2.5, Priority.Alta));
-            manager.AddPackage(new Package(new Location(10, 10), 3.0, Priority.Media));
-            manager.AddPackage(new Package(new Location(3, 3), 1.0, Priority.Baixa));
-            manager.AddPackage(new Package(new Location(7, 2), 5.0, Priority.Alta));
+            DeliveryData.Pacotes.Add(new Package(new Location(5, 5), 2.5, Priority.Alta));
+            DeliveryData.Pacotes.Add(new Package(new Location(10, 10), 3.0, Priority.Media));
+            DeliveryData.Pacotes.Add(new Package(new Location(3, 3), 1.0, Priority.Baixa));
+            DeliveryData.Pacotes.Add(new Package(new Location(7, 2), 5.0, Priority.Alta));
 
             manager.ProcessDeliveries();
 

@@ -37,6 +37,7 @@ namespace DroneDelivery.Utils
         public static void Erro(string text) => ColorText(text, "Red");
         public static void Alerta(string text) => ColorText(text, "Yellow");
 
+
         public static void PrioridadeAlta(string texto) => ColorText(texto, "DarkMagenta");
         public static void PrioridadeMedia(string texto) => ColorText(texto, "Blue");
         public static void PrioridadeBaixa(string texto) => ColorText(texto, "DarkCyan");

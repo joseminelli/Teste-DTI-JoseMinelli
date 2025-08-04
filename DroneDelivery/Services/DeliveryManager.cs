@@ -1,5 +1,6 @@
 ﻿using DroneDelivery.Models;
 using DroneDelivery.Utils;
+using DroneDelivery.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,14 @@ namespace DroneDelivery.Services
     public class DeliveryManager
     {
         private DeliveryReport report = new DeliveryReport();
-        private List<Drone> drones = new List<Drone>();
-        private List<Package> packages = new List<Package>();
-
-        public void AddDrone(Drone drone) => drones.Add(drone);
-        public void AddPackage(Package package) => packages.Add(package);
 
         public void ProcessDeliveries()
         {
             ConsoleHelper.Info("===== Iniciando simulação de entregas =====");
 
             // Ordena os pacotes por prioridade
-            var sortedPackages = packages
+            var drones = DeliveryData.Drones;
+            var sortedPackages = DeliveryData.Pacotes
                 .OrderByDescending(p => p.DeliveryPriority)
                 .ToList();
 
