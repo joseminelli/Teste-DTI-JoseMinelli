@@ -14,7 +14,6 @@ namespace DroneDelivery
     {
         static void Main(string[] args)
         {
-            var manager = new DeliveryManager();
 
             DeliveryData.Drones.Add(new Drone("DR-01", 10.0, 30.0));
             DeliveryData.Drones.Add(new Drone("DR-02", 6.0, 20.0));
@@ -27,6 +26,7 @@ namespace DroneDelivery
             DeliveryData.Pacotes.Add(new Package(new Location(3, 3), 1.0, Priority.Baixa));
             DeliveryData.Pacotes.Add(new Package(new Location(7, 2), 5.0, Priority.Alta));
 
+            var manager = new DeliveryManager(DeliveryData.Drones, DeliveryData.Pacotes, DeliveryData.ZonasProibidas);
             manager.ProcessDeliveries();
 
             ConsoleHelper.Encerrar("Simulação encerrada. Pressione ENTER para sair.");

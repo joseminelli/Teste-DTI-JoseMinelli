@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{04C60704-75F2-4777-8F9D-8B90FAE9DCF4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>DroneDelivery</RootNamespace>
     <AssemblyName>DroneDelivery</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

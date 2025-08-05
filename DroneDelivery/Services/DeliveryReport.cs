@@ -34,6 +34,16 @@ namespace DroneDelivery.Services
 
         }
 
+        public int GetTotalEntregas()
+        {
+            return totalEntregas;
+        }
+
+        public List<Package> GetPacotesNaoEntregues()
+        {
+            return pacotesNaoEntregues;
+        }
+
         public void AdicionarNaoEntregue(Package pacote)
         {
             pacotesNaoEntregues.Add(pacote);
