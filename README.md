@@ -30,6 +30,8 @@ Organização projeto disponíveis no [quadro do Trello](https://trello.com/invi
 * **Geração e revisão de código:** auxílio para a criação e refatoração do simulador de entregas
 * **Criação de testes unitários:** elaboração de cenários para validação das regras de negócio, como capacidade, bateria e zonas proibidas
 * **Boas práticas para testes unitários:** estruturação clara, testes isolados, cobertura de cenários importantes
+* **Melhoria na estrutua do ReadMe:**
+melhor separação por categorias e sugestões
 
 ---
 
