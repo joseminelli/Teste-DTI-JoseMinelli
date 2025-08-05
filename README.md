@@ -76,7 +76,3 @@ Organização projeto disponíveis no [quadro do Trello](https://trello.com/invi
    ```bash
    dotnet test
    ```
-
-
-
-Quer que eu gere para você um modelo de email para enviar o link do GitHub à DTI também?
