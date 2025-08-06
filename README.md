@@ -22,6 +22,7 @@ Organização projeto disponíveis no [quadro do Trello](https://trello.com/invi
 * Recarregamento automático quando bateria insuficiente para próxima entrega
 * Multi-viagens para entrega completa dos pacotes
 * Relatório final detalhado de entregas, pacotes não entregues, eficiência dos drones
+* Classe de acesso aos dados separados para faciitar a implementação de um banco de dados no futuro
 
 ---
 
