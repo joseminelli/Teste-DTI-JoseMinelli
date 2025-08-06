@@ -11,7 +11,9 @@ namespace DroneDelivery.Data
     {
         public static List<Drone> Drones { get; } = new List<Drone>();
         public static List<Package> Pacotes { get; } = new List<Package>();
-        public static List<Location> ZonasProibidas { get; } = new List<Location>();
+        public static List<Location> ZonasProibidas { get; } = new List<Location>(); 
+        public static Location CentroDistribuicao { get; } = new Location(0, 0);
+
 
         public static void Reset()
         {

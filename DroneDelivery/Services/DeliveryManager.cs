@@ -1,4 +1,5 @@
-﻿using DroneDelivery.Models;
+﻿using DroneDelivery.Data;
+using DroneDelivery.Models;
 using DroneDelivery.Utils;
 using System;
 using System.Collections.Generic;
@@ -46,9 +47,10 @@ namespace DroneDelivery.Services
             // Ordenação inteligente
             var sortedPackages = pacotesValidos
                 .OrderByDescending(p => p.DeliveryPriority)
-                .ThenBy(p => drones.Min(d => d.Position.DistanceTo(p.Destination)))
+                .ThenBy(p => DeliveryData.CentroDistribuicao.DistanceTo(p.Destination))
                 .ThenByDescending(p => p.Weight)
                 .ToList();
+
 
             // Constantes para simulação
             const double consumoPorUnidadeDistancia = 0.5; // 0.5% de bateria por unidade de distância
